@@ -115,8 +115,8 @@
 
 /* ---------- 기본 상태(DEFAULTS) ---------- */
 const DEFAULTS={
-  meta:{name:'Void.O 커스텀 경량랙', model:'VO-LR-0900', dwg:'DWG-2026-031'},
-  dims:{w:900, d:450, h:1800, levels:4, type:'독립형', bays:1, load:100, finish:'분체도장 무광 블랙'},
+  meta:{name:'Void.O 커스텀 경량렉', model:'VO-LR-1138-4', dwg:'P250514-JA'},
+  dims:{w:1138, d:531, h:2000, levels:4, type:'독립형', bays:1, load:100, finish:'분체도장 무광 블랙'},
   options:{antiTip:true, casters:false, backPanel:false, brace:false},
   contact:{tel:'1668-0000', kakao:'@voido', email:'cs@void-o.com'},
   text:{
@@ -124,27 +124,30 @@ const DEFAULTS={
     safety:[
       '<b>2인 이상</b> 작업을 권장합니다. 프레임 기립 시 넘어짐에 주의하세요.',
       '반드시 <b>수평인 바닥</b>에 설치하세요. 수평 불량은 흔들림·전도의 원인입니다.',
-      '<b>안전핀</b>을 모든 결합부에 빠짐없이 체결하세요.',
+      '모든 결합부의 <b>M8 볼트를 끝까지 조이</b>세요. 풀린 볼트는 흔들림·이탈의 원인입니다.',
       '무거운 물품은 아래 단, 좌우로 균등하게 적재하세요.'
     ],
-    toolsNote:'무볼트 방식 — 별도 전동공구가 필요 없습니다.',
-    support:'3개월마다 안전핀 체결·수평·흔들림을 점검하세요. 문의는 아래로 연락 주세요.',
+    toolsNote:'볼트 체결 방식 — M8 렌치(또는 복스) 1개로 조립합니다. 팝너트에 볼트를 끼워 조입니다.',
+    support:'3개월마다 볼트 조임·수평·흔들림을 점검하세요. 문의는 아래로 연락 주세요.',
     steps:{
-      parts:{t:'구성품 · 공구 확인', d:'아래 구성품과 공구가 모두 있는지 확인하세요. 부족하면 조립 전에 문의해 주세요.'},
-      side:{t:'한쪽 측면 프레임 만들기', d:'기둥 2개에 측면 빔/선반받침을 끼우고 고무망치로 가볍게 박아 한쪽 면을 완성합니다.', tip:'맨 아래 구멍 1개는 비우고, 아래에서 2·3번째 구멍부터 체결하세요.'},
+      parts:{t:'구성품 · 공구 확인', d:'기둥·가로대·세로대·중판과 체결 부속(팝너트·M8 볼트·발침대), 공구가 모두 있는지 확인하세요. 부족하면 조립 전에 문의해 주세요.'},
+      layPost:{t:'기둥 2개를 바닥에 나란히 눕히기', d:'기둥 2개를 마주보게 바닥에 평행으로 눕힙니다. 바닥 긁힘 방지를 위해 깔개를 권장합니다.'},
+      foot:{t:'기둥 하단에 발침대 체결', d:'눕힌 기둥의 하단(맨 아래)에 발침대를 대고 볼트로 고정합니다.'},
+      side:{t:'한쪽 측면 프레임 — 세로대 체결', d:'기둥 2개 사이에 세로대(깊이 방향)를 대고, 팝너트 위치에 M8 볼트를 끼워 한쪽 측면 프레임을 만듭니다.', tip:'맨 아래 단은 바닥 여유를 두고, 아래 단부터 위로 체결하세요.'},
       two:{t:'반대쪽 측면 프레임도 동일하게', d:'같은 방법으로 반대쪽 측면 프레임을 좌우 대칭으로 만듭니다.'},
-      frame:{t:'전·후면 빔 결합 (아래 → 위)', d:'두 측면 프레임을 세우고, 전면/후면 빔을 맨 아래 단부터 끼워 올립니다.', tip:'아래 단을 먼저 끼워 수평을 잡은 뒤 위로 채우면 안정적입니다. 2인 작업 권장.'},
-      shelf:{t:'선반판 올리기', d:'각 단에 선반판을 빔 위로 안착시킵니다.'},
-      pin:{t:'안전핀 전수 체결', d:'모든 결합부에 안전핀을 끝까지 끼웁니다. 선반·빔 이탈을 막는 핵심 단계입니다.', tip:'안전핀 누락은 가장 흔한 사고 원인입니다. 한 곳도 빠짐없이 확인하세요.'},
-      level:{t:'수평 확인 + 전도방지 고정', d:'수평계로 수평을 확인하고 흔들리면 기둥 하부를 보정합니다. 고단·고하중·다중이용 환경은 벽/바닥에 고정합니다.', tip:'수평이 맞지 않으면 흔들림·전도 위험이 있습니다.'},
+      standup:{t:'두 측면 프레임 세우기', d:'두 측면 프레임을 천천히 세웁니다. 넘어짐 주의 — 2인 작업을 권장합니다.', tip:'세우는 동안 한 사람이 프레임을 잡아 주세요.'},
+      frame:{t:'가로대 결합 (아래 → 위)', d:'전·후면에 가로대(가로 방향)를 대고 맨 아래 단부터 M8 볼트로 체결해 위로 올립니다.', tip:'아래 단을 먼저 체결해 수평을 잡은 뒤 위 단을 채우면 안정적입니다. 2인 작업 권장.'},
+      shelf:{t:'중판(상판) 올려 고정', d:'각 단에 중판을 프레임 위로 안착시키고 상·하판 고정 볼트로 체결합니다.'},
+      tighten:{t:'전 볼트 전수 조임', d:'모든 결합부의 M8 볼트를 끝까지 조입니다. 흔들림·이탈을 막는 핵심 단계입니다.', tip:'볼트 풀림은 흔들림·전도의 가장 흔한 원인입니다. 한 곳도 빠짐없이 조였는지 확인하세요.'},
+      level:{t:'수평 확인 + 전도방지 고정', d:'수평계로 수평을 확인하고 흔들리면 기둥 하부(발침대)를 보정합니다. 고단·고하중·다중이용 환경은 벽/바닥에 고정합니다.', tip:'수평이 맞지 않으면 흔들림·전도 위험이 있습니다.'},
       load:{t:'완성 · 적재 가이드', d:'조립 완료! 무거운 물품은 아래 단, 좌우로 균등하게 적재하세요.', tip:'선반당 최대 적재하중을 초과하지 마세요(과적 금지).'}
     }
   }
 };
 /* 옵션 추가 단계 문구(편집 schema에도 노출) */
-DEFAULTS.text.steps.casters={t:'캐스터(바퀴) 장착', d:'기둥 하단에 캐스터를 끼웁니다(안전발 대신). 끝까지 삽입해 고정하세요.', tip:'이동 후에는 반드시 캐스터 잠금장치를 채우세요.'};
-DEFAULTS.text.steps.backPanel={t:'백패널(뒷판) 체결', d:'뒷면에 패널을 대고 체결해 좌우 흔들림을 줄입니다.'};
-DEFAULTS.text.steps.brace={t:'보강 가새 체결', d:'후면 대각선(X) 가새를 체결해 좌우 흔들림을 잡습니다.'};
+DEFAULTS.text.steps.casters={t:'캐스터(바퀴) 장착', d:'기둥 하단에 캐스터를 볼트로 체결합니다(발침대 대신). 끝까지 조여 고정하세요.', tip:'이동 후에는 반드시 캐스터 잠금장치를 채우세요.'};
+DEFAULTS.text.steps.backPanel={t:'백패널(뒷판) 체결', d:'뒷면에 패널을 대고 볼트로 체결해 좌우 흔들림을 줄입니다.'};
+DEFAULTS.text.steps.brace={t:'보강 가새 체결', d:'후면 대각선(X) 가새를 볼트로 체결해 좌우 흔들림을 잡습니다.'};
 
 /* ---------- 상태 로드(자동저장 복원) ---------- */
 const clone=o=>JSON.parse(JSON.stringify(o));
@@ -173,11 +176,14 @@ const DIA={
  pPost:d=>{const g=geo(d.w,d.d,d.h,d.levels);return render([cuboid(0,0,0,g.t,g.t,d.h*0.5,POST)],{w:80,pad:14});},
  pBeam:d=>{const g=geo(d.w,d.d,d.h,d.levels);return render([cuboid(0,0,0,d.w*0.62,g.tb,g.hb,BEAM)],{w:150,pad:14});},
  pShelf:d=>{const g=geo(d.w,d.d,d.h,d.levels);return render([cuboid(0,0,0,d.w*0.6,d.d*0.6,g.ts,SHELF)],{w:150,pad:14});},
+ layPost:d=>{const g=geo(d.w,d.d,d.h,d.levels),L=d.h*0.85,t=g.t;return render([cuboid(0,0,0,L,t,t,POST),cuboid(0,d.d*0.55,0,L,t,t,POST)],{w:300});},
+ foot:d=>{const g=geo(d.w,d.d,d.h,d.levels),t=g.t,ph=d.h*0.5,fw=t*1.7,fh=t*1.1;const p=[cuboid(0,0,fh,t,t,ph,POST),cuboid(-(fw-t)/2,-(fw-t)/2,0,fw,fw,fh,CASTER)];return render(p,{w:120,extra:M=>arrow(M,[t/2,t/2,fh+ph*0.55],[t/2,t/2,fh+ph*0.1],'#1f6b3b')});},
+ standup:d=>{const g=geo(d.w,d.d,d.h,d.levels),p=[...postSegments(0,0,d.h,g.t,g.zs,g.hb),...postSegments(0,d.d-g.t,d.h,g.t,g.zs,g.hb)];for(const lz of g.zs)p.push(cuboid(0,0,lz,g.tb,d.d,g.hb,BEAM));return render(p,{w:260,extra:M=>arrow(M,[0,d.d*0.5,d.h*1.28],[0,d.d*0.5,d.h*1.03],'#1f6b3b')});},
  side:d=>{const g=geo(d.w,d.d,d.h,d.levels),p=[...postSegments(0,0,d.h,g.t,g.zs,g.hb),...postSegments(0,d.d-g.t,d.h,g.t,g.zs,g.hb)];for(const lz of g.zs)p.push(cuboid(0,0,lz,g.tb,d.d,g.hb,BEAM));return render(p,{w:240});},
  two:d=>{const g=geo(d.w,d.d,d.h,d.levels),p=[];for(const x of [0,d.w-g.t]){p.push(...postSegments(x,0,d.h,g.t,g.zs,g.hb),...postSegments(x,d.d-g.t,d.h,g.t,g.zs,g.hb));for(const lz of g.zs)p.push(cuboid(x,0,lz,g.tb,d.d,g.hb,BEAM));}return render(p,{w:380});},
  frame:d=>{const r=rackParts(d.w,d.d,d.h,d.levels,{beams:true}),g=r.g;return render(r.parts,{w:380,extra:M=>{const lz=g.zs[1];return arrow(M,[d.w*1.28,0,lz+g.hb/2],[d.w*1.03,0,lz+g.hb/2]);}});},
  shelf:d=>{const r=rackParts(d.w,d.d,d.h,d.levels,{beams:true,shelves:true}),g=r.g,top=g.zs[g.zs.length-1]+g.hb+g.ts;return render(r.parts,{w:380,extra:M=>arrow(M,[d.w/2,d.d/2,top+d.h*0.26],[d.w/2,d.d/2,top+d.h*0.03])});},
- joint:()=>{const t=60,hb=70,tb=42,ph=520,bl=330,p=[cuboid(0,0,0,t,t,ph,POST),cuboid(t,0,ph-160,bl,tb,hb,BEAM),cuboid(t-12,9,ph-150,18,24,48,BOX)];return render(p,{w:240,extra:M=>arrow(M,[t-95,21,ph-60],[t-2,21,ph-120],'#1f6b3b')});},
+ bolt:()=>{const t=60,hb=70,tb=42,ph=520,bl=330,p=[cuboid(0,0,0,t,t,ph,POST),cuboid(t,0,ph-160,bl,tb,hb,BEAM)];return render(p,{w:240,extra:M=>{const head=M(P(t+78,21,ph-125));return '<circle cx="'+head[0].toFixed(1)+'" cy="'+head[1].toFixed(1)+'" r="10" fill="#39362c" stroke="#16150f" stroke-width="2.2"/><circle cx="'+head[0].toFixed(1)+'" cy="'+head[1].toFixed(1)+'" r="4" fill="#16150f"/>'+arrow(M,[t+120,21,ph-125],[t+18,21,ph-125],'#1f6b3b');}});},
  wall:d=>{const N=bayN(d),g0=geo(d.w,d.d,d.h,d.levels),Wf=d.w*N+g0.t,r=runParts(d.w,d.d,d.h,d.levels,N),p=[cuboid(-30,-70,0,Wf+60,60,d.h*1.06,WALL)].concat(r.parts);p.push(cuboid(0,-14,d.h*0.9,90,18,46,BEAM));return render(p,{w:runW(N)});},
  full:d=>{const N=bayN(d);return render(runParts(d.w,d.d,d.h,d.levels,N).parts,{w:runW(N)});},
  connect:d=>render(runParts(d.w,d.d,d.h,d.levels,2,{shelves:false}).parts,{w:440}),
@@ -190,10 +196,21 @@ const DIA={
 /* ---------- BOM ---------- */
 function bays(S){return S.dims.type==='연결형'?Math.max(1,S.dims.bays):1;}
 function calcBOM(S){
-  const d=S.dims,b=bays(S),posts=2*(b+1),shelves=d.levels*b,beams=d.levels*(2*b+2),pins=shelves*8;
-  const r=[{part:'기둥(지주)',spec:'H'+d.h+(b>1?' · 독립4+연결'+(b-1)+'×2':''),qty:posts},{part:'선반(선반판)',spec:d.w+'×'+d.d,qty:shelves},{part:'전면/측면 빔',spec:'—',qty:beams},{part:'안전핀',spec:'—',qty:pins}];
-  if(S.options.casters) r.push({part:'캐스터(제동형)',spec:'2"',qty:posts}); else r.push({part:'안전발',spec:'—',qty:posts});
-  r.push({part:'기둥캡',spec:'—',qty:posts});
+  const d=S.dims,b=bays(S),N=d.levels;
+  const posts=2*(b+1);          // 기둥(세로지지대): 독립4 + 연결2/연 (기둥 공유)
+  const bars=b*(4+2*N);         // 가로대(가로 W축): 유닛당 4+2N
+  const sides=b*(4+2*N);        // 세로대(깊이 D축): 유닛당 4+2N
+  const shelves=N*b;            // 중판(상판): 유닛당 N
+  const r=[
+    {part:'기둥(세로지지대)',spec:'H'+d.h+(b>1?' · 독립4+연결'+(b-1)+'×2':''),qty:posts},
+    {part:'가로대',spec:'길이 '+d.w+'mm',qty:bars},
+    {part:'세로대',spec:'길이 '+d.d+'mm',qty:sides},
+    {part:'중판(상판)',spec:d.w+'×'+d.d,qty:shelves}
+  ];
+  if(S.options.casters) r.push({part:'캐스터(제동형)',spec:'2" · 볼트체결',qty:posts}); else r.push({part:'발침대',spec:'기둥 하단',qty:posts});
+  // 체결 부속 — 설계 BOM 기준 수량(실제 동봉 봉투로 최종 확인)
+  r.push({part:'팝너트',spec:'결합부 · ※봉투 확인',qty:8*N*b});
+  r.push({part:'M8 볼트',spec:'스텐 M8 · ※봉투 확인',qty:8*N*b});
   if(S.options.antiTip) r.push({part:'전도방지 브래킷',spec:'L형',qty:2*b});
   if(S.options.backPanel) r.push({part:'백패널(뒷판)',spec:'—',qty:b});
   if(S.options.brace) r.push({part:'X-보강가새',spec:'—',qty:2*b});
@@ -205,16 +222,19 @@ function buildSteps(S){
   const d=S.dims,T=S.text.steps,a=[];
   const pick=(id,svg,extra)=>Object.assign({id,svg,t:T[id].t,d:T[id].d,tip:T[id].tip},extra||{});
   a.push({id:'parts',parts:true,t:T.parts.t,d:T.parts.d});
+  a.push(pick('layPost',DIA.layPost(d)));
   if(S.options.casters) a.push(pick('casters',DIA.casters(d),{tipBad:T.casters.tip}));
-  a.push(pick('side',DIA.side(d),{tipBad:T.side.tip,tip:null}));
+  else a.push(pick('foot',DIA.foot(d)));
+  a.push(pick('side',DIA.side(d),{tip:T.side.tip}));
   a.push(pick('two',DIA.two(d)));
+  a.push(pick('standup',DIA.standup(d),{tipBad:T.standup.tip,tip:null}));
   a.push(pick('frame',DIA.frame(d)));
-  if(S.dims.type==='연결형'&&S.dims.bays>1) a.push({id:'connect',svg:DIA.connect(d),t:'연결형 — 기둥 공유 연결',d:'독립형 옆에 연결형 기둥을 세우고, 가로 연결대 클립을 공유 기둥 양쪽 홈에 끼워 결속합니다. 연결형마다 기둥 2개씩 추가됩니다.'});
+  if(S.dims.type==='연결형'&&S.dims.bays>1) a.push({id:'connect',svg:DIA.connect(d),t:'연결형 — 기둥 공유 연결',d:'독립형 옆에 연결형 유닛을 세우고, 공유 기둥에 가로대·세로대를 M8 볼트로 함께 체결합니다. 연결형마다 기둥 2개씩 추가됩니다.'});
   a.push(Object.assign(pick('shelf',DIA.shelf(d)),{repeat:true}));
   if(S.options.backPanel) a.push(pick('backPanel',DIA.back(d)));
-  a.push(pick('pin',DIA.joint(),{tipBad:T.pin.tip,tip:null}));
+  a.push(pick('tighten',DIA.bolt(),{tipBad:T.tighten.tip,tip:null}));
   if(S.options.brace) a.push(pick('brace',DIA.brace(d)));
-  a.push(S.options.antiTip?pick('level',DIA.wall(d)):{id:'level',svg:DIA.full(d),t:'수평 확인',d:'수평계로 수평을 확인하고 흔들리면 기둥 하부를 보정합니다.'});
+  a.push(S.options.antiTip?pick('level',DIA.wall(d)):{id:'level',svg:DIA.full(d),t:'수평 확인',d:'수평계로 수평을 확인하고 흔들리면 기둥 하부(발침대)를 보정합니다.'});
   a.push(Object.assign(pick('load',DIA.load(d)),{tipBad:T.load.tip,tip:null}));
   return a;
 }
@@ -245,12 +265,12 @@ function renderManual(){
   let bl='';bom.forEach((b,i)=>{bl+='<li><div class="chk" data-bom="'+i+'">'+icoChk+'</div><div class="nm">'+b.part+'<div class="sp">'+b.spec+'</div></div><div class="qty">×'+b.qty+'</div></li>';});
   H+='<section><div class="sec-h"><span class="n">PARTS</span><h2>구성품 확인</h2></div><ul class="bom">'+bl+'</ul></section>';
   // tools
-  H+='<section><div class="sec-h"><span class="n">TOOLS</span><h2>필요 공구</h2></div><div class="tools"><span class="tool req">● 고무망치 (필수)</span><span class="tool">○ 장갑</span><span class="tool">○ 수평계</span></div><p style="font-size:13px;color:var(--sub);margin:12px 0 0">'+esc(T.toolsNote)+'</p></section>';
+  H+='<section><div class="sec-h"><span class="n">TOOLS</span><h2>필요 공구</h2></div><div class="tools"><span class="tool req">● M8 렌치/복스 (필수)</span><span class="tool">○ 장갑</span><span class="tool">○ 수평계</span><span class="tool">○ 전동 드라이버</span></div><p style="font-size:13px;color:var(--sub);margin:12px 0 0">'+esc(T.toolsNote)+'</p></section>';
   // steps
   let ss='<div class="sec-h"><span class="n">ASSEMBLY</span><h2>조립 단계</h2></div>';
   st.forEach((s,i)=>{
     let dia;
-    if(s.parts){dia='<div class="parts3"><div class="p">'+DIA.pPost(d)+'<span>기둥 ×'+bom[0].qty+'</span></div><div class="p">'+DIA.pBeam(d)+'<span>빔 ×'+bom[2].qty+'</span></div><div class="p">'+DIA.pShelf(d)+'<span>선반 ×'+bom[1].qty+'</span></div></div>';}
+    if(s.parts){dia='<div class="parts3"><div class="p">'+DIA.pPost(d)+'<span>기둥 ×'+bom[0].qty+'</span></div><div class="p">'+DIA.pBeam(d)+'<span>가로/세로대 ×'+(bom[1].qty+bom[2].qty)+'</span></div><div class="p">'+DIA.pShelf(d)+'<span>중판 ×'+bom[3].qty+'</span></div></div>';}
     else dia='<div class="diagram">'+s.svg+'</div>';
     ss+='<div class="step"><div class="num">'+(i+1)+'</div><div class="body"><h3>'+esc(s.t)+'</h3>'+dia+'<p>'+s.d+'</p>'+
       (s.repeat?'<span class="repeat">각 단 반복 · 총 '+d.levels+'단</span>':'')+
@@ -280,7 +300,7 @@ const META=[['meta.name','제품명','full'],['meta.model','모델'],['meta.dwg'
 const DIMS=[['dims.w','폭 W(mm)','number'],['dims.d','깊이 D(mm)','number'],['dims.h','높이 H(mm)','number'],['dims.levels','단수','number'],['dims.bays','연결 bay수','number'],['dims.load','선반당 하중(kg)','number'],['dims.finish','마감','text','full']];
 const OPTS=[['options.antiTip','전도방지 고정'],['options.casters','캐스터(이동형)'],['options.backPanel','백패널(뒷판)'],['options.brace','보강 가새']];
 const CONTACT=[['contact.tel','A/S 전화'],['contact.kakao','카카오톡'],['contact.email','이메일','full']];
-const STEP_LABEL={parts:'구성품',side:'측면 프레임',two:'반대쪽 프레임',frame:'전후면 빔',shelf:'선반',pin:'안전핀',level:'수평·전도방지',load:'완성·적재',casters:'옵션:캐스터',backPanel:'옵션:뒷판',brace:'옵션:가새'};
+const STEP_LABEL={parts:'구성품',layPost:'기둥 눕히기',foot:'발침대',side:'측면 프레임',two:'반대쪽 프레임',standup:'프레임 세우기',frame:'가로대 결합',shelf:'중판',tighten:'볼트 조임',level:'수평·전도방지',load:'완성·적재',casters:'옵션:캐스터',backPanel:'옵션:뒷판',brace:'옵션:가새'};
 function inp(path,label,type,full){const v=gp(STATE,path);return '<div class="fld'+(full==='full'?' full':'')+'"><label class="fld">'+label+'</label><input data-path="'+path+'" type="'+(type||'text')+'" value="'+(v==null?'':String(v).replace(/"/g,'&quot;'))+'"></div>';}
 function ta(path,label){const v=gp(STATE,path)||'';return '<div class="fld full"><label class="fld">'+label+'</label><textarea data-path="'+path+'">'+esc(v)+'</textarea></div>';}
 function buildForm(){
@@ -319,9 +339,9 @@ function bindForm(){
   document.getElementById('dbFile').onchange=ev=>{const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const incoming=JSON.parse(r.result);const db=getDB();Object.assign(db,incoming);setDB(db);refreshModels();alert('DB 가져왔습니다.');}catch(err){alert('JSON 형식 오류');}};r.readAsText(f);};
 }
 const BUILTIN_MODELS={
- 'VO-LR-0900-4':{meta:{name:'Void.O 경량랙 독립형',model:'VO-LR-0900-4'},dims:{w:900,d:450,h:1800,levels:4,type:'독립형',bays:1,load:100}},
- 'VO-LR-1200-5':{meta:{name:'Void.O 경량랙 독립형',model:'VO-LR-1200-5'},dims:{w:1200,d:600,h:2100,levels:5,type:'독립형',bays:1,load:150}},
- 'VO-LR-0900-5C3':{meta:{name:'Void.O 경량랙 연결형',model:'VO-LR-0900-5C3'},dims:{w:900,d:450,h:2100,levels:5,type:'연결형',bays:3,load:120}}
+ 'VO-LR-1138-4':{meta:{name:'Void.O 경량렉 표준 독립형',model:'VO-LR-1138-4'},dims:{w:1138,d:531,h:2000,levels:4,type:'독립형',bays:1,load:100}},
+ 'VO-LR-1110-4C6':{meta:{name:'Void.O 경량렉 원주공장형(연결6)',model:'VO-LR-1110-4C6'},dims:{w:1110,d:562,h:2000,levels:4,type:'연결형',bays:6,load:100}},
+ 'VO-LR-1208-4C6':{meta:{name:'Void.O 경량렉 하남창고형(연결6·대표폭)',model:'VO-LR-1208-4C6'},dims:{w:1208,d:563,h:2000,levels:4,type:'연결형',bays:6,load:100}}
 };
 function getDB(){try{return JSON.parse(localStorage.getItem('voido_db')||'{}');}catch(e){return{};}}
 function setDB(o){try{localStorage.setItem('voido_db',JSON.stringify(o));}catch(e){}}
