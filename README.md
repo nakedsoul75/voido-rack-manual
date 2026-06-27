@@ -4,6 +4,10 @@
 
 브랜드: **Void.O** (주식회사 디엘나인)
 
+**🔗 라이브:** https://nakedsoul75.github.io/voido-rack-manual/
+
+박스/제품 부착용 QR: [`assets/qr.svg`](assets/qr.svg) · [`assets/qr.png`](assets/qr.png)
+
 ## 실행
 
 단일 정적 파일입니다. 별도 빌드 없음.
