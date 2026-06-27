@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Void.O 경량랙 조립 매뉴얼 생성기</title>
+<style>
+  :root{--ink:#16150f;--sub:#76726a;--line:#e7e3da;--bg:#fff;--card:#f6f4ee;--warn:#8a4a16;--warnbg:#fbf1e7;--ok:#1f6b3b;--okbg:#eef4ef;--maxw:560px;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:#e9e6df;color:var(--ink);font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;line-height:1.62;font-size:16px;-webkit-font-smoothing:antialiased}
+
+  /* toolbar */
+  #bar{position:sticky;top:0;z-index:40;max-width:var(--maxw);margin:0 auto;display:flex;gap:8px;padding:10px 14px;background:#16150f}
+  #bar button{flex:1;border:none;border-radius:9px;padding:11px 8px;font-family:inherit;font-size:13.5px;font-weight:800;cursor:pointer}
+  .b-gen{background:#f2efe6;color:#16150f}
+  .b-set{background:#39362c;color:#f2efe6}
+  .b-print{background:#39362c;color:#f2efe6}
+
+  /* editor */
+  #editor{max-width:var(--maxw);margin:0 auto;background:#1c1b16;color:#f2efe6;display:none}
+  #editor.on{display:block}
+  #editor h4{margin:0;padding:14px 18px 4px;font-size:12px;letter-spacing:.06em;color:#cfc9ba;text-transform:uppercase}
+  details.grp{border-top:1px solid #2c2b23}
+  details.grp summary{cursor:pointer;padding:12px 18px;font-weight:700;font-size:13.5px;list-style:none;display:flex;align-items:center;gap:8px}
+  details.grp summary::-webkit-details-marker{display:none}
+  details.grp summary::before{content:'▸';color:#8a8674;font-size:11px}
+  details.grp[open] summary::before{content:'▾'}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;padding:4px 18px 18px}
+  .grid .full{grid-column:1/3}
+  label.fld{display:block;font-size:11px;color:#b7b2a4;font-weight:600;margin-bottom:5px}
+  .fld input,.fld select,.fld textarea,.grid input,.grid select{width:100%;background:#27261f;border:1px solid #3a382f;color:#fff;border-radius:9px;padding:10px 11px;font-size:14px;font-family:inherit}
+  textarea{resize:vertical;min-height:42px;line-height:1.45}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:6px 18px 18px}
+  .opt{display:flex;align-items:center;gap:9px;background:#27261f;border:1px solid #3a382f;border-radius:10px;padding:11px 12px;font-size:13.5px;font-weight:600;cursor:pointer}
+  .opt input{width:auto;flex:none}
+  .presetbar{padding:6px 18px 20px;display:flex;flex-direction:column;gap:9px}
+  .presetbar .row{display:flex;gap:8px}
+  .presetbar select,.presetbar input{flex:1;background:#27261f;border:1px solid #3a382f;color:#fff;border-radius:9px;padding:10px;font-size:13.5px;font-family:inherit}
+  .presetbar button{border:none;border-radius:9px;padding:10px 13px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;white-space:nowrap}
+  .pp{background:#f2efe6;color:#16150f}.ps{background:#3a382f;color:#e9e6df}
+  .hint{font-size:11px;color:#8a8674;padding:0 18px 16px;line-height:1.5}
+
+  /* manual */
+  .wrap{max-width:var(--maxw);margin:0 auto;background:var(--bg)}
+  header{padding:16px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+  .brand{font-weight:800;letter-spacing:.18em;font-size:16px}
+  .brand small{display:block;font-weight:500;letter-spacing:.04em;color:var(--sub);font-size:10px;margin-top:3px}
+  .prog{font-size:11px;color:var(--sub);white-space:nowrap}
+  .hero{padding:28px 22px 22px;border-bottom:1px solid var(--line)}
+  .hero .kicker{font-size:11px;letter-spacing:.14em;color:var(--sub);font-weight:700;text-transform:uppercase}
+  .hero h1{font-size:23px;margin:6px 0 4px;font-weight:800;letter-spacing:-.01em}
+  .hero .meta{color:var(--sub);font-size:12.5px;margin-bottom:8px}
+  .heroimg{display:flex;justify-content:center;padding:8px 0 16px}
+  .heroimg svg{width:72%;max-width:300px;height:auto}
+  .spec{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .spec div{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:11px 13px}
+  .spec b{display:block;font-size:10px;color:var(--sub);font-weight:600;margin-bottom:3px}
+  .spec span{font-size:14.5px;font-weight:700}
+  section{padding:26px 22px;border-bottom:1px solid var(--line)}
+  .sec-h{display:flex;align-items:baseline;gap:9px;margin:0 0 16px}
+  .sec-h .n{font-size:10.5px;color:var(--sub);font-weight:700;letter-spacing:.12em}
+  .sec-h h2{font-size:18px;margin:0;font-weight:800}
+  .warns{display:flex;flex-direction:column;gap:9px}
+  .warn{display:flex;gap:10px;background:var(--warnbg);border:1px solid #efd9c3;border-radius:12px;padding:12px 14px;font-size:13.5px;color:#593212}
+  .warn svg{flex:none;margin-top:1px}
+  .parts3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .parts3 .p{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:10px 6px;text-align:center}
+  .parts3 .p svg{height:62px;width:auto;max-width:100%}
+  .parts3 .p span{display:block;font-size:11.5px;font-weight:700;margin-top:6px;color:#4a473f}
+  .bom{list-style:none;margin:0;padding:0}
+  .bom li{display:flex;align-items:center;gap:13px;padding:12px 4px;border-bottom:1px dashed var(--line)}
+  .bom li:last-child{border-bottom:none}
+  .chk{flex:none;width:23px;height:23px;border:1.6px solid #c7c3b9;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .chk svg{opacity:0}.chk.on{background:var(--ink);border-color:var(--ink)}.chk.on svg{opacity:1}
+  .bom .nm{flex:1;font-size:14.5px;font-weight:600}.bom .sp{font-size:12px;color:var(--sub);font-weight:500}
+  .bom .qty{font-weight:800;font-size:14.5px}
+  .tools{display:flex;flex-wrap:wrap;gap:8px}
+  .tool{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:8px 15px;font-size:13px;font-weight:600}
+  .tool.req{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .step{display:flex;gap:14px;padding:20px 0;border-bottom:1px solid var(--line)}
+  .step:last-child{border-bottom:none}
+  .step .num{flex:none;width:31px;height:31px;border-radius:999px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px}
+  .step .body{flex:1;min-width:0}
+  .step h3{margin:4px 0 10px;font-size:16px;font-weight:800}
+  .diagram{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:16px;margin:2px 0 11px;display:flex;justify-content:center}
+  .diagram svg{width:100%;height:auto;max-width:300px;display:block}
+  .step p{margin:0;font-size:14px;color:#3b3933}
+  .tip{margin-top:9px;font-size:12.5px;color:var(--warn);background:var(--warnbg);border-radius:9px;padding:8px 11px;display:flex;gap:8px}
+  .tip.bad{color:#8a1c1c;background:#fdeeee}.tip svg{flex:none;margin-top:1px}
+  .repeat{display:inline-block;margin-top:9px;font-size:12px;font-weight:700;background:var(--okbg);color:var(--ok);border-radius:999px;padding:4px 12px}
+  .done{flex:none;width:25px;height:25px;border:1.6px solid #c7c3b9;border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;align-self:flex-start;margin-top:3px}
+  .done svg{opacity:0}.done.on{background:var(--ok);border-color:var(--ok)}.done.on svg{opacity:1}
+  .loadbox{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:18px;text-align:center;margin-bottom:12px}
+  .loadbox .big{font-size:32px;font-weight:900}.loadbox .big small{font-size:14px;font-weight:700;color:var(--sub)}
+  .loadbox .cap{font-size:12.5px;color:var(--sub);margin-top:2px}
+  footer{padding:28px 22px 44px;background:var(--card)}
+  .asrow{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 15px;font-weight:700;font-size:14px;margin-bottom:9px}
+  .asrow b{font-weight:800}.asrow span{color:var(--sub);font-weight:600;margin-left:auto;font-size:13px}
+  .copy{text-align:center;font-size:11px;color:var(--sub);margin-top:16px}
+  @media print{@page{margin:14mm}html,body{background:#fff}#bar,#editor,.prog,.done,.chk{display:none!important}.wrap{max-width:none}section,.step{break-inside:avoid}.hero{break-after:avoid}}
+</style>
+</head>
+<body>
+
+<div id="bar">
+  <button class="b-gen" onclick="generate()">✓ 매뉴얼 생성/새로고침</button>
+  <button class="b-set" onclick="toggleEditor()">⚙ 설정</button>
+  <button class="b-print" onclick="window.print()">🖨 PDF</button>
+</div>
+<div id="editor"></div>
+<div class="wrap" id="app"></div>
+
+<script>
+/* ===================== Void.O 경량랙 매뉴얼 생성기 v3 ===================== */
+
+/* ---------- 기본 상태(DEFAULTS) ---------- */
+const DEFAULTS={
+  meta:{name:'Void.O 커스텀 경량랙', model:'VO-LR-0900', dwg:'DWG-2026-031'},
+  dims:{w:900, d:450, h:1800, levels:4, type:'독립형', bays:1, load:100, finish:'분체도장 무광 블랙'},
+  options:{antiTip:true, casters:false, backPanel:false, brace:false},
+  contact:{tel:'1668-0000', kakao:'@voido', email:'cs@void-o.com'},
+  text:{
+    brand:'VOID.O', kicker:'Assembly Manual',
+    safety:[
+      '<b>2인 이상</b> 작업을 권장합니다. 프레임 기립 시 넘어짐에 주의하세요.',
+      '반드시 <b>수평인 바닥</b>에 설치하세요. 수평 불량은 흔들림·전도의 원인입니다.',
+      '<b>안전핀</b>을 모든 결합부에 빠짐없이 체결하세요.',
+      '무거운 물품은 아래 단, 좌우로 균등하게 적재하세요.'
+    ],
+    toolsNote:'무볼트 방식 — 별도 전동공구가 필요 없습니다.',
+    support:'3개월마다 안전핀 체결·수평·흔들림을 점검하세요. 문의는 아래로 연락 주세요.',
+    steps:{
+      parts:{t:'구성품 · 공구 확인', d:'아래 구성품과 공구가 모두 있는지 확인하세요. 부족하면 조립 전에 문의해 주세요.'},
+      side:{t:'한쪽 측면 프레임 만들기', d:'기둥 2개에 측면 빔/선반받침을 끼우고 고무망치로 가볍게 박아 한쪽 면을 완성합니다.', tip:'맨 아래 구멍 1개는 비우고, 아래에서 2·3번째 구멍부터 체결하세요.'},
+      two:{t:'반대쪽 측면 프레임도 동일하게', d:'같은 방법으로 반대쪽 측면 프레임을 좌우 대칭으로 만듭니다.'},
+      frame:{t:'전·후면 빔 결합 (아래 → 위)', d:'두 측면 프레임을 세우고, 전면/후면 빔을 맨 아래 단부터 끼워 올립니다.', tip:'아래 단을 먼저 끼워 수평을 잡은 뒤 위로 채우면 안정적입니다. 2인 작업 권장.'},
+      shelf:{t:'선반판 올리기', d:'각 단에 선반판을 빔 위로 안착시킵니다.'},
+      pin:{t:'안전핀 전수 체결', d:'모든 결합부에 안전핀을 끝까지 끼웁니다. 선반·빔 이탈을 막는 핵심 단계입니다.', tip:'안전핀 누락은 가장 흔한 사고 원인입니다. 한 곳도 빠짐없이 확인하세요.'},
+      level:{t:'수평 확인 + 전도방지 고정', d:'수평계로 수평을 확인하고 흔들리면 기둥 하부를 보정합니다. 고단·고하중·다중이용 환경은 벽/바닥에 고정합니다.', tip:'수평이 맞지 않으면 흔들림·전도 위험이 있습니다.'},
+      load:{t:'완성 · 적재 가이드', d:'조립 완료! 무거운 물품은 아래 단, 좌우로 균등하게 적재하세요.', tip:'선반당 최대 적재하중을 초과하지 마세요(과적 금지).'}
+    }
+  }
+};
+/* 옵션 추가 단계 문구(편집 schema에도 노출) */
+DEFAULTS.text.steps.casters={t:'캐스터(바퀴) 장착', d:'기둥 하단에 캐스터를 끼웁니다(안전발 대신). 끝까지 삽입해 고정하세요.', tip:'이동 후에는 반드시 캐스터 잠금장치를 채우세요.'};
+DEFAULTS.text.steps.backPanel={t:'백패널(뒷판) 체결', d:'뒷면에 패널을 대고 체결해 좌우 흔들림을 줄입니다.'};
+DEFAULTS.text.steps.brace={t:'보강 가새 체결', d:'후면 대각선(X) 가새를 체결해 좌우 흔들림을 잡습니다.'};
+
+/* ---------- 상태 로드(자동저장 복원) ---------- */
+const clone=o=>JSON.parse(JSON.stringify(o));
+function deepMerge(base,ov){const r=clone(base);for(const k in ov){if(ov[k]&&typeof ov[k]==='object'&&!Array.isArray(ov[k])){r[k]=deepMerge(base[k]||{},ov[k]);}else r[k]=ov[k];}return r;}
+let STATE=clone(DEFAULTS);
+try{const last=localStorage.getItem('voido_last'); if(last) STATE=deepMerge(DEFAULTS,JSON.parse(last));}catch(e){}
+
+const gp=(o,p)=>p.split('.').reduce((a,k)=>a==null?a:a[k],o);
+function sp(o,p,v){const ks=p.split('.');let a=o;for(let i=0;i<ks.length-1;i++){if(a[ks[i]]==null)a[ks[i]]=/^\d+$/.test(ks[i+1])?[]:{};a=a[ks[i]];}a[ks[ks.length-1]]=v;}
+function autosave(){try{localStorage.setItem('voido_last',JSON.stringify(STATE));}catch(e){}}
+
+/* ---------- ISO 엔진 (검증완료) ---------- */
+const C=Math.cos(Math.PI/6),S=Math.sin(Math.PI/6);
+function P(x,y,z){return[(x-y)*C,(x+y)*S-z];}
+function cuboid(x0,y0,z0,dx,dy,dz,sh,depthOverride){const v=(x,y,z)=>[x0+x,y0+y,z0+z];const c={E:v(0,0,dz),F:v(dx,0,dz),G:v(dx,dy,dz),H:v(0,dy,dz),B:v(dx,0,0),Cc:v(dx,dy,0),Dd:v(0,dy,0)};return{faces:[{pts:[c.E,c.F,c.G,c.H],f:sh.top},{pts:[c.Dd,c.H,c.G,c.Cc],f:sh.front},{pts:[c.B,c.F,c.G,c.Cc],f:sh.right}],depth:depthOverride!=null?depthOverride:(x0+dx/2)+(y0+dy/2)+(z0+dz/2)};}
+function render(parts,opt){opt=opt||{};parts=parts.slice().sort((a,b)=>a.depth-b.depth);let mnX=1e9,mnY=1e9,mxX=-1e9,mxY=-1e9;const pl=[];for(const pt of parts)for(const fc of pt.faces){const pp=fc.pts.map(q=>{const r=P(q[0],q[1],q[2]);mnX=Math.min(mnX,r[0]);mxX=Math.max(mxX,r[0]);mnY=Math.min(mnY,r[1]);mxY=Math.max(mxY,r[1]);return r;});pl.push({pp,f:fc.f});}const pd=opt.pad||26,tW=opt.w||440,sc=(tW-2*pd)/(mxX-mnX),h=(mxY-mnY)*sc+2*pd,M=p=>[(p[0]-mnX)*sc+pd,(p[1]-mnY)*sc+pd],sw=opt.stroke||2;let s='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+tW.toFixed(0)+' '+h.toFixed(0)+'">';for(const g of pl){const d=g.pp.map(M).map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ')+' Z';s+='<path d="'+d+'" fill="'+g.f+'" stroke="#16150f" stroke-width="'+sw+'" stroke-linejoin="round"/>';}if(opt.extra)s+=opt.extra(M,sc);return s+'</svg>';}
+function arrow(M,a3,b3,col){col=col||'#16150f';const a=M(P(a3[0],a3[1],a3[2])),b=M(P(b3[0],b3[1],b3[2])),an=Math.atan2(b[1]-a[1],b[0]-a[0]),L=12;const p1=[b[0]-L*Math.cos(an-0.42),b[1]-L*Math.sin(an-0.42)],p2=[b[0]-L*Math.cos(an+0.42),b[1]-L*Math.sin(an+0.42)];return '<line x1="'+a[0].toFixed(1)+'" y1="'+a[1].toFixed(1)+'" x2="'+b[0].toFixed(1)+'" y2="'+b[1].toFixed(1)+'" stroke="'+col+'" stroke-width="3.4" stroke-linecap="round"/><path d="M'+b[0].toFixed(1)+' '+b[1].toFixed(1)+' L'+p1[0].toFixed(1)+' '+p1[1].toFixed(1)+' L'+p2[0].toFixed(1)+' '+p2[1].toFixed(1)+' Z" fill="'+col+'"/>';}
+const POST={top:'#dcdad3',front:'#c9c6bd',right:'#bdb9af'},BEAM={top:'#e7e4dc',front:'#d6d2c8',right:'#cac6bb'},SHELF={top:'#f4f2ec',front:'#e2dfd6',right:'#d7d3c8'},WALL={top:'#efece6',front:'#e8e5dd',right:'#e8e5dd'},BOX={top:'#cfc8b8',front:'#bcae96',right:'#ad9f86'},CASTER={top:'#4a4742',front:'#3a3833',right:'#2f2d29'},SHEET={top:'rgba(150,160,175,0.34)',front:'rgba(150,160,175,0.30)',right:'rgba(130,140,155,0.30)'};
+function geo(W,D,H,L){const t=Math.max(36,Math.min(W,D)*0.05),hb=Math.max(40,H*0.03),tb=Math.max(28,t*0.7),ts=Math.max(22,H*0.016),zs=[];for(let i=0;i<L;i++)zs.push(H*0.06+i*((H*0.92)/(L-1)));return{t,hb,tb,ts,zs};}
+function postSegments(px,py,H,t,zs,hb){const bk=[0];for(const z of zs){bk.push(z);bk.push(z+hb);}bk.push(H);const u=[...new Set(bk)].sort((a,b)=>a-b);const segs=[];for(let i=0;i<u.length-1;i++)segs.push(cuboid(px,py,u[i],t,t,u[i+1]-u[i],POST));return segs;}
+function rackParts(W,D,H,L,o){o=o||{};const g=geo(W,D,H,L),p=[];const ps=[[0,0],[W-g.t,0],[0,D-g.t],[W-g.t,D-g.t]];if(o.posts!==false)for(const q of ps)p.push(...postSegments(q[0],q[1],H,g.t,g.zs,g.hb));for(const lz of g.zs){if(o.beams){p.push(cuboid(0,0,lz,W,g.tb,g.hb,BEAM));p.push(cuboid(0,D-g.tb,lz,W,g.tb,g.hb,BEAM));p.push(cuboid(0,0,lz,g.tb,D,g.hb,BEAM));p.push(cuboid(W-g.tb,0,lz,g.tb,D,g.hb,BEAM));}if(o.shelves)p.push(cuboid(0,0,o.beams?lz+g.hb:lz,W,D,g.ts,SHELF));}return{parts:p,g};}
+function bayN(d){return d.type==='연결형'?Math.max(1,d.bays|0):1;}
+function runParts(W,D,H,L,N,o){o=o||{};const g=geo(W,D,H,L),t=g.t,hb=g.hb,tb=g.tb,ts=g.ts,p=[];for(let i=0;i<=N;i++){const x=i*W;p.push(...postSegments(x,0,H,t,g.zs,hb));p.push(...postSegments(x,D-t,H,t,g.zs,hb));}for(let b=0;b<N;b++){const x0=b*W;for(const lz of g.zs){p.push(cuboid(x0,0,lz,W+t,tb,hb,BEAM));p.push(cuboid(x0,D-tb,lz,W+t,tb,hb,BEAM));p.push(cuboid(x0,0,lz,tb,D,hb,BEAM));p.push(cuboid(x0+W,0,lz,tb,D,hb,BEAM));if(o.shelves!==false)p.push(cuboid(x0,0,lz+hb,W+t,D,ts,SHELF));}}return {parts:p,g};}
+function runW(N){return N>1?Math.min(660,300+(N-1)*150):300;}
+const DIA={
+ pPost:d=>{const g=geo(d.w,d.d,d.h,d.levels);return render([cuboid(0,0,0,g.t,g.t,d.h*0.5,POST)],{w:80,pad:14});},
+ pBeam:d=>{const g=geo(d.w,d.d,d.h,d.levels);return render([cuboid(0,0,0,d.w*0.62,g.tb,g.hb,BEAM)],{w:150,pad:14});},
+ pShelf:d=>{const g=geo(d.w,d.d,d.h,d.levels);return render([cuboid(0,0,0,d.w*0.6,d.d*0.6,g.ts,SHELF)],{w:150,pad:14});},
+ side:d=>{const g=geo(d.w,d.d,d.h,d.levels),p=[...postSegments(0,0,d.h,g.t,g.zs,g.hb),...postSegments(0,d.d-g.t,d.h,g.t,g.zs,g.hb)];for(const lz of g.zs)p.push(cuboid(0,0,lz,g.tb,d.d,g.hb,BEAM));return render(p,{w:240});},
+ two:d=>{const g=geo(d.w,d.d,d.h,d.levels),p=[];for(const x of [0,d.w-g.t]){p.push(...postSegments(x,0,d.h,g.t,g.zs,g.hb),...postSegments(x,d.d-g.t,d.h,g.t,g.zs,g.hb));for(const lz of g.zs)p.push(cuboid(x,0,lz,g.tb,d.d,g.hb,BEAM));}return render(p,{w:380});},
+ frame:d=>{const r=rackParts(d.w,d.d,d.h,d.levels,{beams:true}),g=r.g;return render(r.parts,{w:380,extra:M=>{const lz=g.zs[1];return arrow(M,[d.w*1.28,0,lz+g.hb/2],[d.w*1.03,0,lz+g.hb/2]);}});},
+ shelf:d=>{const r=rackParts(d.w,d.d,d.h,d.levels,{beams:true,shelves:true}),g=r.g,top=g.zs[g.zs.length-1]+g.hb+g.ts;return render(r.parts,{w:380,extra:M=>arrow(M,[d.w/2,d.d/2,top+d.h*0.26],[d.w/2,d.d/2,top+d.h*0.03])});},
+ joint:()=>{const t=60,hb=70,tb=42,ph=520,bl=330,p=[cuboid(0,0,0,t,t,ph,POST),cuboid(t,0,ph-160,bl,tb,hb,BEAM),cuboid(t-12,9,ph-150,18,24,48,BOX)];return render(p,{w:240,extra:M=>arrow(M,[t-95,21,ph-60],[t-2,21,ph-120],'#1f6b3b')});},
+ wall:d=>{const N=bayN(d),g0=geo(d.w,d.d,d.h,d.levels),Wf=d.w*N+g0.t,r=runParts(d.w,d.d,d.h,d.levels,N),p=[cuboid(-30,-70,0,Wf+60,60,d.h*1.06,WALL)].concat(r.parts);p.push(cuboid(0,-14,d.h*0.9,90,18,46,BEAM));return render(p,{w:runW(N)});},
+ full:d=>{const N=bayN(d);return render(runParts(d.w,d.d,d.h,d.levels,N).parts,{w:runW(N)});},
+ connect:d=>render(runParts(d.w,d.d,d.h,d.levels,2,{shelves:false}).parts,{w:440}),
+ load:d=>{const N=bayN(d),r=runParts(d.w,d.d,d.h,d.levels,N),g=r.g,p=r.parts.slice(),z=g.zs,ts=g.ts;p.push(cuboid(d.w*0.06,d.d*0.12,z[0]+ts,d.w*0.4,d.d*0.7,d.h*0.16,BOX));p.push(cuboid(d.w*0.54,d.d*0.15,z[0]+ts,d.w*0.36,d.d*0.58,d.h*0.14,BOX));if(z[1])p.push(cuboid(d.w*0.1,d.d*0.2,z[1]+ts,d.w*0.3,d.d*0.5,d.h*0.1,BOX));return render(p,{w:runW(N)});},
+ casters:d=>{const g=geo(d.w,d.d,d.h,d.levels),r=rackParts(d.w,d.d,d.h,d.levels,{shelves:true}),p=r.parts.slice(),wh=Math.max(60,d.h*0.05),ps=[[0,0],[d.w-g.t,0],[0,d.d-g.t],[d.w-g.t,d.d-g.t]];for(const q of ps)p.push(cuboid(q[0]+g.t*0.15,q[1]+g.t*0.15,-wh,g.t*0.7,g.t*0.7,wh,CASTER));return render(p,{w:380});},
+ back:d=>{const r=rackParts(d.w,d.d,d.h,d.levels,{beams:true,shelves:true}),p=r.parts.slice();p.push(cuboid(0,-6,d.h*0.05,d.w,6,d.h*0.9,SHEET,1e9));return render(p,{w:380});},
+ brace:d=>{const r=rackParts(d.w,d.d,d.h,d.levels,{beams:true}),g=r.g,z0=g.zs[0],z1=g.zs[g.zs.length-1]+g.hb;return render(r.parts,{w:380,extra:M=>{const a=M(P(0,0,z0)),b=M(P(d.w,0,z1)),c=M(P(d.w,0,z0)),e=M(P(0,0,z1)),ln=(p,q)=>'<line x1="'+p[0].toFixed(1)+'" y1="'+p[1].toFixed(1)+'" x2="'+q[0].toFixed(1)+'" y2="'+q[1].toFixed(1)+'" stroke="#16150f" stroke-width="3" stroke-linecap="round"/>';return ln(a,b)+ln(c,e);}});}
+};
+
+/* ---------- BOM ---------- */
+function bays(S){return S.dims.type==='연결형'?Math.max(1,S.dims.bays):1;}
+function calcBOM(S){
+  const d=S.dims,b=bays(S),posts=2*(b+1),shelves=d.levels*b,beams=d.levels*(2*b+2),pins=shelves*8;
+  const r=[{part:'기둥(지주)',spec:'H'+d.h+(b>1?' · 독립4+연결'+(b-1)+'×2':''),qty:posts},{part:'선반(선반판)',spec:d.w+'×'+d.d,qty:shelves},{part:'전면/측면 빔',spec:'—',qty:beams},{part:'안전핀',spec:'—',qty:pins}];
+  if(S.options.casters) r.push({part:'캐스터(제동형)',spec:'2"',qty:posts}); else r.push({part:'안전발',spec:'—',qty:posts});
+  r.push({part:'기둥캡',spec:'—',qty:posts});
+  if(S.options.antiTip) r.push({part:'전도방지 브래킷',spec:'L형',qty:2*b});
+  if(S.options.backPanel) r.push({part:'백패널(뒷판)',spec:'—',qty:b});
+  if(S.options.brace) r.push({part:'X-보강가새',spec:'—',qty:2*b});
+  return r;
+}
+
+/* ---------- 단계 ---------- */
+function buildSteps(S){
+  const d=S.dims,T=S.text.steps,a=[];
+  const pick=(id,svg,extra)=>Object.assign({id,svg,t:T[id].t,d:T[id].d,tip:T[id].tip},extra||{});
+  a.push({id:'parts',parts:true,t:T.parts.t,d:T.parts.d});
+  if(S.options.casters) a.push(pick('casters',DIA.casters(d),{tipBad:T.casters.tip}));
+  a.push(pick('side',DIA.side(d),{tipBad:T.side.tip,tip:null}));
+  a.push(pick('two',DIA.two(d)));
+  a.push(pick('frame',DIA.frame(d)));
+  if(S.dims.type==='연결형'&&S.dims.bays>1) a.push({id:'connect',svg:DIA.connect(d),t:'연결형 — 기둥 공유 연결',d:'독립형 옆에 연결형 기둥을 세우고, 가로 연결대 클립을 공유 기둥 양쪽 홈에 끼워 결속합니다. 연결형마다 기둥 2개씩 추가됩니다.'});
+  a.push(Object.assign(pick('shelf',DIA.shelf(d)),{repeat:true}));
+  if(S.options.backPanel) a.push(pick('backPanel',DIA.back(d)));
+  a.push(pick('pin',DIA.joint(),{tipBad:T.pin.tip,tip:null}));
+  if(S.options.brace) a.push(pick('brace',DIA.brace(d)));
+  a.push(S.options.antiTip?pick('level',DIA.wall(d)):{id:'level',svg:DIA.full(d),t:'수평 확인',d:'수평계로 수평을 확인하고 흔들리면 기둥 하부를 보정합니다.'});
+  a.push(Object.assign(pick('load',DIA.load(d)),{tipBad:T.load.tip,tip:null}));
+  return a;
+}
+
+/* ---------- 매뉴얼 렌더 ---------- */
+const icoChk='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+const icoW='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8a4a16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
+const esc=t=>(''+t).replace(/[<>]/g,c=>({'<':'&lt;','>':'&gt;'}[c]));
+function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function cell(b,v){return '<div><b>'+b+'</b><span>'+v+'</span></div>';}
+function warnLine(t){return '<div class="warn">'+icoW+'<div>'+t+'</div></div>';}
+
+function renderManual(){
+  const S=STATE,d=S.dims,T=S.text,st=buildSteps(S),bom=calcBOM(S),app=document.getElementById('app');
+  let H='<header><div class="brand">'+esc(T.brand)+'<small>경량랙 조립 안내서</small></div><div class="prog" id="prog"></div></header>';
+  H+='<div class="hero"><div class="kicker">'+esc(T.kicker)+'</div><h1>'+esc(S.meta.name)+'</h1>'+
+     '<div class="meta">'+esc(S.meta.model)+' · 도면 '+esc(S.meta.dwg)+' · '+today()+'</div>'+
+     '<div class="heroimg">'+DIA.full(d)+'</div><div class="spec">'+
+     cell('외형 (W×D×H)',d.w+'×'+d.d+'×'+d.h+'mm')+cell('단수',d.levels+'단')+
+     cell('형태',d.type+(d.type==='연결형'?' '+d.bays+'연 (기둥'+(2*(Math.max(1,d.bays)+1))+')':' (기둥4)'))+cell('선반당 하중',d.load+'kg')+
+     cell('마감',esc(d.finish))+cell('예상 소요시간','약 '+(10+d.levels*5)+'분')+'</div></div>';
+  // safety (+옵션 경고)
+  let sf=T.safety.map(warnLine).join('');
+  if(S.options.antiTip) sf+=warnLine('고단·고하중 제품입니다. <b>벽/바닥 전도방지 고정</b>을 권장합니다.');
+  if(S.options.casters) sf+=warnLine('이동형(캐스터)입니다. <b>정지 시 반드시 잠금</b>을 채우세요.');
+  H+='<section><div class="sec-h"><span class="n">SAFETY</span><h2>안전 먼저 읽어주세요</h2></div><div class="warns">'+sf+'</div></section>';
+  // parts
+  let bl='';bom.forEach((b,i)=>{bl+='<li><div class="chk" data-bom="'+i+'">'+icoChk+'</div><div class="nm">'+b.part+'<div class="sp">'+b.spec+'</div></div><div class="qty">×'+b.qty+'</div></li>';});
+  H+='<section><div class="sec-h"><span class="n">PARTS</span><h2>구성품 확인</h2></div><ul class="bom">'+bl+'</ul></section>';
+  // tools
+  H+='<section><div class="sec-h"><span class="n">TOOLS</span><h2>필요 공구</h2></div><div class="tools"><span class="tool req">● 고무망치 (필수)</span><span class="tool">○ 장갑</span><span class="tool">○ 수평계</span></div><p style="font-size:13px;color:var(--sub);margin:12px 0 0">'+esc(T.toolsNote)+'</p></section>';
+  // steps
+  let ss='<div class="sec-h"><span class="n">ASSEMBLY</span><h2>조립 단계</h2></div>';
+  st.forEach((s,i)=>{
+    let dia;
+    if(s.parts){dia='<div class="parts3"><div class="p">'+DIA.pPost(d)+'<span>기둥 ×'+bom[0].qty+'</span></div><div class="p">'+DIA.pBeam(d)+'<span>빔 ×'+bom[2].qty+'</span></div><div class="p">'+DIA.pShelf(d)+'<span>선반 ×'+bom[1].qty+'</span></div></div>';}
+    else dia='<div class="diagram">'+s.svg+'</div>';
+    ss+='<div class="step"><div class="num">'+(i+1)+'</div><div class="body"><h3>'+esc(s.t)+'</h3>'+dia+'<p>'+s.d+'</p>'+
+      (s.repeat?'<span class="repeat">각 단 반복 · 총 '+d.levels+'단</span>':'')+
+      (s.tip?'<div class="tip">'+icoW+'<div>'+s.tip+'</div></div>':'')+
+      (s.tipBad?'<div class="tip bad">'+icoW+'<div>'+s.tipBad+'</div></div>':'')+
+      '</div><div class="done" data-step="'+i+'">'+icoChk+'</div></div>';
+  });
+  H+='<section>'+ss+'</section>';
+  // load
+  H+='<section><div class="sec-h"><span class="n">LOAD</span><h2>적재 · 사용 가이드</h2></div><div class="loadbox"><div class="big">'+d.load+'<small> kg / 선반</small></div><div class="cap">최대 적재하중 (균등 분산 기준)</div></div><div class="warns">'+warnLine('무거운 물품은 <b>아래 단</b>, 가벼운 물품은 위 단에.')+warnLine('한쪽으로 쏠리지 않게 <b>균등하게</b> 올리세요.')+'</div></section>';
+  // footer
+  let as='';const c=S.contact;if(c.tel)as+=asRow('전화',c.tel);if(c.kakao)as+=asRow('카카오톡',c.kakao);if(c.email)as+=asRow('이메일',c.email);
+  H+='<footer><div class="sec-h"><span class="n">SUPPORT</span><h2>유지보수 &amp; A/S</h2></div><p style="font-size:13.5px;color:#555;margin:0 0 14px">'+esc(T.support)+'</p>'+as+'<div class="copy">© '+new Date().getFullYear()+' Void.O · 주식회사 디엘나인</div></footer>';
+  app.innerHTML=H;
+  bindManual(st.length);updateProg(st.length);
+}
+function asRow(b,v){return '<div class="asrow"><b>'+b+'</b><span>'+esc(v)+'</span></div>';}
+function bindManual(n){
+  document.querySelectorAll('[data-bom]').forEach(c=>{if(LS('vo_bom_'+c.dataset.bom)==='1')c.classList.add('on');c.onclick=()=>{const on=!c.classList.contains('on');c.classList.toggle('on',on);LS('vo_bom_'+c.dataset.bom,on?'1':'0');};});
+  document.querySelectorAll('[data-step]').forEach(c=>{if(LS('vo_step_'+c.dataset.step)==='1')c.classList.add('on');c.onclick=()=>{const on=!c.classList.contains('on');c.classList.toggle('on',on);LS('vo_step_'+c.dataset.step,on?'1':'0');updateProg(n);};});
+}
+function LS(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v);}catch(e){return null;}}
+function updateProg(total){let done=0;for(let i=0;i<total;i++)if(LS('vo_step_'+i)==='1')done++;const p=document.getElementById('prog');if(p)p.textContent='조립 '+done+' / '+total+' 단계';}
+
+/* ---------- 편집 폼 ---------- */
+const META=[['meta.name','제품명','full'],['meta.model','모델'],['meta.dwg','도면번호']];
+const DIMS=[['dims.w','폭 W(mm)','number'],['dims.d','깊이 D(mm)','number'],['dims.h','높이 H(mm)','number'],['dims.levels','단수','number'],['dims.bays','연결 bay수','number'],['dims.load','선반당 하중(kg)','number'],['dims.finish','마감','text','full']];
+const OPTS=[['options.antiTip','전도방지 고정'],['options.casters','캐스터(이동형)'],['options.backPanel','백패널(뒷판)'],['options.brace','보강 가새']];
+const CONTACT=[['contact.tel','A/S 전화'],['contact.kakao','카카오톡'],['contact.email','이메일','full']];
+const STEP_LABEL={parts:'구성품',side:'측면 프레임',two:'반대쪽 프레임',frame:'전후면 빔',shelf:'선반',pin:'안전핀',level:'수평·전도방지',load:'완성·적재',casters:'옵션:캐스터',backPanel:'옵션:뒷판',brace:'옵션:가새'};
+function inp(path,label,type,full){const v=gp(STATE,path);return '<div class="fld'+(full==='full'?' full':'')+'"><label class="fld">'+label+'</label><input data-path="'+path+'" type="'+(type||'text')+'" value="'+(v==null?'':String(v).replace(/"/g,'&quot;'))+'"></div>';}
+function ta(path,label){const v=gp(STATE,path)||'';return '<div class="fld full"><label class="fld">'+label+'</label><textarea data-path="'+path+'">'+esc(v)+'</textarea></div>';}
+function buildForm(){
+  const e=document.getElementById('editor');
+  let h='<h4>기본 정보</h4><div class="grid">'+META.map(f=>inp(f[0],f[1],'text',f[2])).join('')+
+    '<div class="fld full"><label class="fld">형태</label><select data-path="dims.type"><option'+(STATE.dims.type==='독립형'?' selected':'')+'>독립형</option><option'+(STATE.dims.type==='연결형'?' selected':'')+'>연결형</option></select></div>'+
+    DIMS.map(f=>inp(f[0],f[1],f[2],f[3])).join('')+'</div>';
+  h+='<details class="grp" open><summary>옵션 (켜면 단계·부품·경고가 추가됩니다)</summary><div class="opts">'+
+    OPTS.map(o=>'<label class="opt"><input type="checkbox" data-path="'+o[0]+'"'+(gp(STATE,o[0])?' checked':'')+'> '+o[1]+'</label>').join('')+'</div></details>';
+  let tx='<details class="grp"><summary>문구 편집 (수정하면 자동 저장·재사용)</summary><div class="grid">'+
+    inp('text.brand','브랜드 표기','text')+inp('text.kicker','상단 라벨','text')+
+    ta('text.safety.0','안전문구 1')+ta('text.safety.1','안전문구 2')+ta('text.safety.2','안전문구 3')+ta('text.safety.3','안전문구 4');
+  Object.keys(STATE.text.steps).forEach(id=>{const base='text.steps.'+id;tx+='<div class="fld full" style="margin-top:6px;color:#cfc9ba;font-size:11px;font-weight:700">▪ '+(STEP_LABEL[id]||id)+'</div>'+inp(base+'.t','제목','text','full')+ta(base+'.d','설명')+(gp(STATE,base+'.tip')!=null?ta(base+'.tip','주의문구'):'');});
+  tx+=ta('text.toolsNote','공구 안내문')+ta('text.support','유지보수 안내문')+'</div></details>';
+  h+=tx;
+  h+='<details class="grp"><summary>A/S 연락처</summary><div class="grid">'+CONTACT.map(f=>inp(f[0],f[1],'text',f[2])).join('')+'</div></details>';
+  h+='<details class="grp" open><summary>모델 DB (저장 / 불러오기)</summary><div class="presetbar">'+
+    '<div class="row"><select id="mdlSel"></select><button class="pp" id="mdlLoad">불러오기</button><button class="ps" id="mdlDel">삭제</button></div>'+
+    '<div class="row"><button class="pp" id="mdlSave" style="flex:1">💾 현재 모델 저장</button><button class="ps" id="mdlNew" style="flex:1">🆕 새 모델</button></div>'+
+    '<div class="row"><button class="ps" id="dbExport" style="flex:1">DB 내보내기</button><button class="ps" id="dbImport" style="flex:1">DB 가져오기</button><input id="dbFile" type="file" accept="application/json" style="display:none"></div>'+
+    '</div><div class="hint">모델 칸의 <b>모델코드 기준</b>으로 저장됩니다. 같은 코드 = 갱신, 새 코드 = 새 레코드. 불러오면 파라미터·문구·옵션·매뉴얼 전체가 복원됩니다. 백업·다른 PC 이전은 “DB 내보내기”.</div></details>';
+  e.innerHTML=h;
+  bindForm();refreshModels();
+}
+function bindForm(){
+  document.querySelectorAll('#editor [data-path]').forEach(el=>{
+    const h=()=>{let v;if(el.type==='checkbox')v=el.checked;else if(el.type==='number')v=Number(el.value);else v=el.value;sp(STATE,el.dataset.path,v);autosave();renderManual();};
+    el.addEventListener('input',h);el.addEventListener('change',h);
+  });
+  document.getElementById('mdlSave').onclick=()=>{readFormIntoState();const code=(STATE.meta.model||'').trim();if(!code){alert('모델 칸에 모델코드를 입력하세요.');return;}const db=getDB();db[code]=clone(STATE);setDB(db);refreshModels(code);alert(code+' 저장됨');};
+  document.getElementById('mdlLoad').onclick=()=>{const code=document.getElementById('mdlSel').value;const all=allModels();if(all[code]){STATE=deepMerge(DEFAULTS,all[code]);autosave();buildForm();renderManual();alert(code+' 불러옴');}};
+  document.getElementById('mdlDel').onclick=()=>{const code=document.getElementById('mdlSel').value;if(!code)return;if(!confirm(code+' 삭제할까요?'))return;const db=getDB();delete db[code];setDB(db);refreshModels();};
+  document.getElementById('mdlNew').onclick=()=>{if(!confirm('새 모델을 시작할까요? 저장하지 않은 변경은 사라집니다.'))return;STATE=clone(DEFAULTS);STATE.meta.model='';STATE.meta.name='';autosave();buildForm();renderManual();};
+  document.getElementById('dbExport').onclick=()=>{download('voido_model_db.json',JSON.stringify(getDB(),null,2));};
+  document.getElementById('dbImport').onclick=()=>document.getElementById('dbFile').click();
+  document.getElementById('dbFile').onchange=ev=>{const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const incoming=JSON.parse(r.result);const db=getDB();Object.assign(db,incoming);setDB(db);refreshModels();alert('DB 가져왔습니다.');}catch(err){alert('JSON 형식 오류');}};r.readAsText(f);};
+}
+const BUILTIN_MODELS={
+ 'VO-LR-0900-4':{meta:{name:'Void.O 경량랙 독립형',model:'VO-LR-0900-4'},dims:{w:900,d:450,h:1800,levels:4,type:'독립형',bays:1,load:100}},
+ 'VO-LR-1200-5':{meta:{name:'Void.O 경량랙 독립형',model:'VO-LR-1200-5'},dims:{w:1200,d:600,h:2100,levels:5,type:'독립형',bays:1,load:150}},
+ 'VO-LR-0900-5C3':{meta:{name:'Void.O 경량랙 연결형',model:'VO-LR-0900-5C3'},dims:{w:900,d:450,h:2100,levels:5,type:'연결형',bays:3,load:120}}
+};
+function getDB(){try{return JSON.parse(localStorage.getItem('voido_db')||'{}');}catch(e){return{};}}
+function setDB(o){try{localStorage.setItem('voido_db',JSON.stringify(o));}catch(e){}}
+function allModels(){return Object.assign({},BUILTIN_MODELS,getDB());}
+function refreshModels(sel){const s=document.getElementById('mdlSel');if(!s)return;const all=allModels(),db=getDB(),ks=Object.keys(all);s.innerHTML=ks.length?ks.map(k=>{const nm=(all[k].meta&&all[k].meta.name)||'';return '<option value="'+esc(k)+'">'+esc(k)+(nm?' — '+esc(nm):'')+(db[k]?'':' (표준)')+'</option>';}).join(''):'<option value="">(모델 없음)</option>';if(sel)s.value=sel;}
+function download(name,text){try{const b=new Blob([text],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);}catch(e){alert('다운로드 실패');}}
+function toggleEditor(){document.getElementById('editor').classList.toggle('on');}
+function readFormIntoState(){document.querySelectorAll('#editor [data-path]').forEach(el=>{let v;if(el.type==='checkbox')v=el.checked;else if(el.type==='number')v=Number(el.value);else v=el.value;sp(STATE,el.dataset.path,v);});autosave();}
+function generate(){readFormIntoState();renderManual();}
+/* ---------- init (v4 · model DB) ---------- */
+buildForm();
+renderManual();
+</script>
+</body>
+</html>
