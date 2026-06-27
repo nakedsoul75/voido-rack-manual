@@ -169,7 +169,8 @@ const POST={top:'#dcdad3',front:'#c9c6bd',right:'#bdb9af'},BEAM={top:'#e7e4dc',f
 function geo(W,D,H,L){const t=Math.max(36,Math.min(W,D)*0.05),hb=Math.max(40,H*0.03),tb=Math.max(28,t*0.7),ts=Math.max(22,H*0.016),zs=[];for(let i=0;i<L;i++)zs.push(H*0.06+i*((H*0.92)/(L-1)));return{t,hb,tb,ts,zs};}
 function postSegments(px,py,H,t,zs,hb){const bk=[0];for(const z of zs){bk.push(z);bk.push(z+hb);}bk.push(H);const u=[...new Set(bk)].sort((a,b)=>a-b);const segs=[];for(let i=0;i<u.length-1;i++)segs.push(cuboid(px,py,u[i],t,t,u[i+1]-u[i],POST));return segs;}
 function rackParts(W,D,H,L,o){o=o||{};const g=geo(W,D,H,L),p=[];const ps=[[0,0],[W-g.t,0],[0,D-g.t],[W-g.t,D-g.t]];if(o.posts!==false)for(const q of ps)p.push(...postSegments(q[0],q[1],H,g.t,g.zs,g.hb));for(const lz of g.zs){if(o.beams){p.push(cuboid(0,0,lz,W,g.tb,g.hb,BEAM));p.push(cuboid(0,D-g.tb,lz,W,g.tb,g.hb,BEAM));p.push(cuboid(0,0,lz,g.tb,D,g.hb,BEAM));p.push(cuboid(W-g.tb,0,lz,g.tb,D,g.hb,BEAM));}if(o.shelves)p.push(cuboid(0,0,o.beams?lz+g.hb:lz,W,D,g.ts,SHELF));}return{parts:p,g};}
-function bayN(d){return d.type==='연결형'?Math.max(1,d.bays|0):1;}
+function isConn(d){return d.type==='연결형'||((d.bays|0)>1);}
+function bayN(d){return isConn(d)?Math.max(2,d.bays|0):1;}
 function runParts(W,D,H,L,N,o){o=o||{};const g=geo(W,D,H,L),t=g.t,hb=g.hb,tb=g.tb,ts=g.ts,p=[];for(let i=0;i<=N;i++){const x=i*W;p.push(...postSegments(x,0,H,t,g.zs,hb));p.push(...postSegments(x,D-t,H,t,g.zs,hb));}for(let b=0;b<N;b++){const x0=b*W;for(const lz of g.zs){p.push(cuboid(x0,0,lz,W+t,tb,hb,BEAM));p.push(cuboid(x0,D-tb,lz,W+t,tb,hb,BEAM));p.push(cuboid(x0,0,lz,tb,D,hb,BEAM));p.push(cuboid(x0+W,0,lz,tb,D,hb,BEAM));if(o.shelves!==false)p.push(cuboid(x0,0,lz+hb,W+t,D,ts,SHELF));}}return {parts:p,g};}
 function runW(N){return N>1?Math.min(660,300+(N-1)*150):300;}
 const DIA={
@@ -194,7 +195,7 @@ const DIA={
 };
 
 /* ---------- BOM ---------- */
-function bays(S){return S.dims.type==='연결형'?Math.max(1,S.dims.bays):1;}
+function bays(S){return bayN(S.dims);}
 function calcBOM(S){
   const d=S.dims,b=bays(S),N=d.levels;
   const posts=2*(b+1);          // 기둥(세로지지대): 독립4 + 연결2/연 (기둥 공유)
@@ -229,7 +230,7 @@ function buildSteps(S){
   a.push(pick('two',DIA.two(d)));
   a.push(pick('standup',DIA.standup(d),{tipBad:T.standup.tip,tip:null}));
   a.push(pick('frame',DIA.frame(d)));
-  if(S.dims.type==='연결형'&&S.dims.bays>1) a.push({id:'connect',svg:DIA.connect(d),t:'연결형 — 기둥 공유 연결',d:'독립형 옆에 연결형 유닛을 세우고, 공유 기둥에 가로대·세로대를 M8 볼트로 함께 체결합니다. 연결형마다 기둥 2개씩 추가됩니다.'});
+  if(isConn(d)) a.push({id:'connect',svg:DIA.connect(d),t:'연결형 — 기둥 공유 연결',d:'독립형 옆에 연결형 유닛을 세우고, 공유 기둥에 가로대·세로대를 M8 볼트로 함께 체결합니다. 연결형마다 기둥 2개씩 추가됩니다.'});
   a.push(Object.assign(pick('shelf',DIA.shelf(d)),{repeat:true}));
   if(S.options.backPanel) a.push(pick('backPanel',DIA.back(d)));
   a.push(pick('tighten',DIA.bolt(),{tipBad:T.tighten.tip,tip:null}));
@@ -254,7 +255,7 @@ function renderManual(){
      '<div class="meta">'+esc(S.meta.model)+' · 도면 '+esc(S.meta.dwg)+' · '+today()+'</div>'+
      '<div class="heroimg">'+DIA.full(d)+'</div><div class="spec">'+
      cell('외형 (W×D×H)',d.w+'×'+d.d+'×'+d.h+'mm')+cell('단수',d.levels+'단')+
-     cell('형태',d.type+(d.type==='연결형'?' '+d.bays+'연 (기둥'+(2*(Math.max(1,d.bays)+1))+')':' (기둥4)'))+cell('선반당 하중',d.load+'kg')+
+     cell('형태',isConn(d)?'연결형 '+bayN(d)+'연 (기둥'+(2*(bayN(d)+1))+')':'독립형 (기둥4)')+cell('선반당 하중',d.load+'kg')+
      cell('마감',esc(d.finish))+cell('예상 소요시간','약 '+(10+d.levels*5)+'분')+'</div></div>';
   // safety (+옵션 경고)
   let sf=T.safety.map(warnLine).join('');
@@ -297,7 +298,7 @@ function updateProg(total){let done=0;for(let i=0;i<total;i++)if(LS('vo_step_'+i
 
 /* ---------- 편집 폼 ---------- */
 const META=[['meta.name','제품명','full'],['meta.model','모델'],['meta.dwg','도면번호']];
-const DIMS=[['dims.w','폭 W(mm)','number'],['dims.d','깊이 D(mm)','number'],['dims.h','높이 H(mm)','number'],['dims.levels','단수','number'],['dims.bays','연결 bay수','number'],['dims.load','선반당 하중(kg)','number'],['dims.finish','마감','text','full']];
+const DIMS=[['dims.w','폭 W(mm)','number'],['dims.d','깊이 D(mm)','number'],['dims.h','높이 H(mm)','number'],['dims.levels','단수','number'],['dims.bays','연결 bay수 (2↑=연결형)','number'],['dims.load','선반당 하중(kg)','number'],['dims.finish','마감','text','full']];
 const OPTS=[['options.antiTip','전도방지 고정'],['options.casters','캐스터(이동형)'],['options.backPanel','백패널(뒷판)'],['options.brace','보강 가새']];
 const CONTACT=[['contact.tel','A/S 전화'],['contact.kakao','카카오톡'],['contact.email','이메일','full']];
 const STEP_LABEL={parts:'구성품',layPost:'기둥 눕히기',foot:'발침대',side:'측면 프레임',two:'반대쪽 프레임',standup:'프레임 세우기',frame:'가로대 결합',shelf:'중판',tighten:'볼트 조임',level:'수평·전도방지',load:'완성·적재',casters:'옵션:캐스터',backPanel:'옵션:뒷판',brace:'옵션:가새'};
@@ -327,7 +328,13 @@ function buildForm(){
 }
 function bindForm(){
   document.querySelectorAll('#editor [data-path]').forEach(el=>{
-    const h=()=>{let v;if(el.type==='checkbox')v=el.checked;else if(el.type==='number')v=Number(el.value);else v=el.value;sp(STATE,el.dataset.path,v);autosave();renderManual();};
+    const h=()=>{let v;if(el.type==='checkbox')v=el.checked;else if(el.type==='number')v=Number(el.value);else v=el.value;sp(STATE,el.dataset.path,v);
+      // bay수 ↔ 형태 자동 동기화 (bay수≥2 = 연결형)
+      if(el.dataset.path==='dims.bays'){if((STATE.dims.bays|0)>1)STATE.dims.type='연결형';}
+      if(el.dataset.path==='dims.type'){if(STATE.dims.type==='독립형')STATE.dims.bays=1;else if((STATE.dims.bays|0)<2)STATE.dims.bays=2;}
+      const tSel=document.querySelector('#editor [data-path="dims.type"]');if(tSel&&tSel.value!==STATE.dims.type)tSel.value=STATE.dims.type;
+      const bInp=document.querySelector('#editor [data-path="dims.bays"]');if(bInp&&document.activeElement!==bInp&&String(STATE.dims.bays)!==bInp.value)bInp.value=STATE.dims.bays;
+      autosave();renderManual();};
     el.addEventListener('input',h);el.addEventListener('change',h);
   });
   document.getElementById('mdlSave').onclick=()=>{readFormIntoState();const code=(STATE.meta.model||'').trim();if(!code){alert('모델 칸에 모델코드를 입력하세요.');return;}const db=getDB();db[code]=clone(STATE);setDB(db);refreshModels(code);alert(code+' 저장됨');};
